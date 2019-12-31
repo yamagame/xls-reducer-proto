@@ -18,8 +18,18 @@ const {
 async function main() {
   const files = await readJSON(inputFolder);
 
+  app.post('/files', (req, res) => {
+    res.json(files.map( file => {
+      return {
+        filename: file.filename,
+      }
+    }));
+  })
+
   app.post('/keys', (req, res) => {
-    res.json(files[0].key);
+    const { filename } = req.body;
+    const results = files.filter( file => file.filename == filename);
+    res.json(results ? results.keys : null );
   })
 
   app.post('/reduce', (req, res) => {

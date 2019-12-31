@@ -109,9 +109,37 @@ function reduceData(files, _col, _row) {
   return files.map( file => {
     let sum = 0;
     for (const col of _col) {
+
+      let ncol = -1;
+      if (typeof(col) === 'string') {
+        file.key.col.some( (v, i) => {
+          if (v == col) {
+            ncol = i;
+            return true;
+          }
+          return false;
+        })
+      } else {
+        ncol = col;
+      }
+
       for (const row of _row) {
-        if (col >= 0 && file.cells.length >= row && row >= 0 && file.cells[row].length >= col) {
-          const value = file.cells[row][col].replace(/[^0-9\.]/g, '');
+
+        let nrow = -1;
+        if (typeof(row) === 'string') {
+          file.key.row.some( (v, i) => {
+            if (v == row) {
+              nrow = i;
+              return true;
+            }
+            return false;
+          })
+        } else {
+          nrow = row;
+        }
+
+        if (ncol >= 0 && file.cells.length >= ncol && row >= 0 && file.cells[ncol].length >= nrow) {
+          const value = file.cells[ncol][nrow].replace(/[^0-9\.]/g, '');
           sum += parseInt(value);
         }
       }
