@@ -144,7 +144,7 @@ function reduceData(files, _col, _row) {
         }
       }
     }
-    return { value: sum, date: file.date, };
+    return { value: sum, date: file.date, filename: file.filename };
   });
 }
 

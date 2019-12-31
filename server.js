@@ -51,9 +51,10 @@ async function main() {
       return {
         x: d.date,
         y: d.value,
+        filename: d.filename,
       }
     }).sort((a,b) => {
-      return (a.date > b.date ? 1 : -1);
+      return (new Date(a.x) > new Date(b.x) ? 1 : -1);
     }))
   })
 
