@@ -26,10 +26,22 @@ async function main() {
     }));
   })
 
-  app.post('/keys', (req, res) => {
+  app.post('/key', (req, res) => {
     const { filename } = req.body;
     const results = files.filter( file => file.filename == filename);
-    res.json(results ? results.keys : null );
+    res.json(results ? results.key : null );
+  })
+
+  app.post('/cell', (req, res) => {
+    const { filename } = req.body;
+    const results = files.filter( file => file.filename == filename);
+    res.json(results ? results.cells : null );
+  })
+
+  app.post('/json', (req, res) => {
+    const { filename } = req.body;
+    const results = files.filter( file => file.filename == filename);
+    res.json(results);
   })
 
   app.post('/reduce', (req, res) => {
