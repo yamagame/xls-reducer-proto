@@ -15,7 +15,12 @@ async function readJSON(dirname) {
   const files = fs.readdirSync(dirname);
   const results = [];
   for (const file of files) {
-    results.push(JSON.parse(fs.readFileSync(path.join(dirname, file))));
+    try {
+      const json = JSON.parse(fs.readFileSync(path.join(dirname, file)));
+      results.push(json);
+    } catch(err) {
+      //parse error
+    }
   }
   return results;
 }
