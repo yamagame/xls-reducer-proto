@@ -138,7 +138,7 @@ function reduceData(files, _col, _row) {
           nrow = row;
         }
 
-        if (ncol >= 0 && file.cells.length >= ncol && row >= 0 && file.cells[ncol].length >= nrow) {
+        if (ncol >= 0 && file.cells.length >= ncol && nrow >= 0 && file.cells[ncol].length >= nrow) {
           const value = file.cells[ncol][nrow].replace(/[^0-9\.]/g, '');
           sum += parseInt(value);
         }
