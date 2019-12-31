@@ -29,13 +29,13 @@ async function main() {
   app.post('/key', (req, res) => {
     const { filename } = req.body;
     const results = files.filter( file => file.filename == filename);
-    res.json(results ? results.key : null );
+    res.json(results.map( file => file.key ));
   })
 
   app.post('/cell', (req, res) => {
     const { filename } = req.body;
     const results = files.filter( file => file.filename == filename);
-    res.json(results ? results.cells : null );
+    res.json(results.map( file => file.cells ));
   })
 
   app.post('/json', (req, res) => {
