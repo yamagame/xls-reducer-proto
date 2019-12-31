@@ -83,17 +83,17 @@ function connvertData(data, conf) {
       if (sheet.length >= conf.key.col) {
         Object.keys(sheet[conf.key.col]).forEach( (k, i) => {
           const v = sheet[conf.key.col][k];
-          return i >= conf.key.row+1 ? colKey.push(v) : null;
+          return i >= conf.key.row+1 ? rowKey.push(v) : null;
          });
       }
-      if (sheet.length >= conf.key.row) {
-        sheet.forEach( (v, i) => i >= conf.key.col+1 ? rowKey.push(v[Object.keys(v)[conf.key.row]]) : null );
+      if (sheet.length >= conf.key.col) {
+        sheet.forEach( (line, i) => i >= conf.key.col+1 ? colKey.push(line[''+conf.key.row]) : null );
       }
-      for (c=conf.key.col+1;c<conf.key.col+rowKey.length;c++) {
+      for (c=conf.key.col+1;c<conf.key.col+1+colKey.length;c++) {
         const line = sheet[c];
         const lineKeys = Object.keys(line);
         const data = [];
-        for (r=conf.key.row+1;r<conf.key.row+rowKey.length;r++) {
+        for (r=conf.key.row+1;r<conf.key.row+1+rowKey.length;r++) {
           data.push(line[lineKeys[r]]);
         }
         cells.push(data);
