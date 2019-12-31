@@ -27,20 +27,20 @@ async function main() {
   })
 
   app.post('/key', (req, res) => {
-    const { filename } = req.body;
+    const { filenames } = req.body;
     const results = files.filter( file => file.filename == filename);
     res.json(results.map( file => file.key ));
   })
 
   app.post('/cell', (req, res) => {
-    const { filename } = req.body;
-    const results = files.filter( file => file.filename == filename);
+    const { filenames } = req.body;
+    const results = files.filter( file => filenames.some( filename => file.filename == filename ));
     res.json(results.map( file => file.cells ));
   })
 
   app.post('/json', (req, res) => {
-    const { filename } = req.body;
-    const results = files.filter( file => file.filename == filename);
+    const { filenames } = req.body;
+    const results = files.filter( file => filenames.some( filename => file.filename == filename ));
     res.json(results);
   })
 
