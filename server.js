@@ -28,7 +28,7 @@ async function main() {
 
   app.post('/key', (req, res) => {
     const { filenames } = req.body;
-    const results = files.filter( file => file.filename == filename);
+    const results = files.filter( file => filenames.some( filename => file.filename == filename ));
     res.json(results.map( file => file.key ));
   })
 
