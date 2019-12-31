@@ -52,6 +52,8 @@ async function main() {
         x: d.date,
         y: d.value,
       }
+    }).sort((a,b) => {
+      return (a.date > b.date ? 1 : -1);
     }))
   })
 
