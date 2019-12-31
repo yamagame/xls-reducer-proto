@@ -11,6 +11,15 @@ function getDate(filename) {
   return null;
 }
 
+async function readJSON(dirname) {
+  const files = fs.readdirSync(dirname);
+  const results = [];
+  for (const file of files) {
+    results.push(JSON.parse(fs.readFileSync(path.join(dirname, file))));
+  }
+  return results;
+}
+
 async function readCSV(dirname) {
   function _readCSV(filename) {
     return new Promise(resolve => {
@@ -64,15 +73,6 @@ async function readCSV(dirname) {
   return results;
 }
 
-const conf = {
-  sheet: 0,
-  key: { col:2, row:0, },
-  sum: [
-    { col: 3, row: 1, },
-    { col: 4, row: 1, },
-  ],
-}
-
 function connvertData(data, conf) {
   return data.map( file => {
     const colKey = [];
@@ -99,39 +99,34 @@ function connvertData(data, conf) {
         cells.push(data);
       }
     }
-    return { key: { col:colKey, row:rowKey, }, cells, date: file.date }
+    return { key: { col:colKey, row:rowKey, }, cells, date: file.date, filename: file.filename }
   })
 }
 
-function reduceData(files, col, row) {
+function reduceData(files, _col, _row) {
+  if (typeof(_col) !== 'object') _col = [ _col ];
+  if (typeof(_row) !== 'object') _row = [ _row ];
   return files.map( file => {
-    if (file.cells.length >= col && file.cells[col].length >= row) {
-      return { value: file.cells[col][row].replace(/[^0-9\.]/g, ''), date: file.date, col: file.key.col[col], row: file.key.row[row], };
+    let sum = 0;
+    for (const col of _col) {
+      for (const row of _row) {
+        if (col >= 0 && file.cells.length >= row && row >= 0 && file.cells[row].length >= col) {
+          const value = file.cells[row][col].replace(/[^0-9\.]/g, '');
+          sum += parseInt(value);
+        }
+      }
     }
-    return { value: 0, date: file.date };
+    return { value: sum, date: file.date, };
   });
 }
 
-const dataFolder = process.argv.length > 2 ? process.argv[2] : 'data';
-
-async function main() {
-  const results = [];
-  for(const sum of conf.sum) {
-    const row = sum.row-conf.key.row-1;
-    const col = sum.col-conf.key.col-1;
-    const data = reduceData(connvertData(await readCSV(dataFolder), conf), col, row );
-    let keys = {};
-    const result = data.map( d => {
-      const { row, col } = d;
-      keys.row = row;
-      keys.col = col;
-      delete d.row;
-      delete d.col;
-      return { ...d }
-    })
-    results.push({ values: result, ...keys });
-  }
-  console.log(JSON.stringify(results, null, '  '));
+function getKeys(file, col, row) {
+  return { col: file.key.col[col], row: file.key.row[row] };
 }
 
-main();
+exports.readJSON = readJSON;
+exports.getDate = getDate;
+exports.readCSV = readCSV;
+exports.connvertData = connvertData;
+exports.reduceData = reduceData;
+exports.getKeys = getKeys;
