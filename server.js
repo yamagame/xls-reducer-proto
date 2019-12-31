@@ -26,16 +26,16 @@ async function main() {
     }));
   })
 
-  app.post('/key', (req, res) => {
+  app.post('/keys', (req, res) => {
     const { filenames } = req.body;
     const results = files.filter( file => filenames.some( filename => file.filename == filename ));
-    res.json(results.map( file => file.key ));
+    res.json(results.map( file => { return { ...file.key, filename: file.filename }} ));
   })
 
-  app.post('/cell', (req, res) => {
+  app.post('/cells', (req, res) => {
     const { filenames } = req.body;
     const results = files.filter( file => filenames.some( filename => file.filename == filename ));
-    res.json(results.map( file => file.cells ));
+    res.json(results.map( file => { return { ...file.cells, filename: file.filename }} ));
   })
 
   app.post('/json', (req, res) => {
